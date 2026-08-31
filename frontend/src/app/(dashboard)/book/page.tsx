@@ -8,6 +8,48 @@ import { PageHeader } from '@/components/ui/SharedComponents';
 import { BookOpen, Upload, X, CheckCircle, AlertCircle, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const AmPmTimePicker = ({ value, onChange, error }: { value: string, onChange: (v: string) => void, error?: string }) => {
+  const [hour, min] = value ? value.split(':') : ['10', '00'];
+  let h = parseInt(hour || '10');
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12;
+  if (h === 0) h = 12;
+
+  const handleHourChange = (newH: string) => {
+    let nh = parseInt(newH);
+    if (ampm === 'PM' && nh !== 12) nh += 12;
+    if (ampm === 'AM' && nh === 12) nh = 0;
+    onChange(`${nh.toString().padStart(2, '0')}:${min}`);
+  }
+
+  const handleMinChange = (newM: string) => {
+    onChange(`${hour}:${newM}`);
+  }
+
+  const handleAmPmChange = (newAmPm: string) => {
+    let nh = parseInt(hour);
+    if (newAmPm === 'PM' && nh < 12) nh += 12;
+    if (newAmPm === 'AM' && nh >= 12) nh -= 12;
+    onChange(`${nh.toString().padStart(2, '0')}:${min}`);
+  }
+
+  return (
+    <div className="flex gap-1.5">
+      <select value={h.toString()} onChange={(e) => handleHourChange(e.target.value)} className={`flex-1 px-2 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none bg-white ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
+        {[1,2,3,4,5,6,7,8,9,10,11,12].map(num => <option key={num} value={num.toString()}>{num.toString().padStart(2, '0')}</option>)}
+      </select>
+      <span className="self-center font-bold text-slate-400">:</span>
+      <select value={min} onChange={(e) => handleMinChange(e.target.value)} className={`flex-1 px-2 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none bg-white ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
+        {['00','15','30','45'].map(m => <option key={m} value={m}>{m}</option>)}
+      </select>
+      <select value={ampm} onChange={(e) => handleAmPmChange(e.target.value)} className={`flex-1 px-2 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none bg-white font-medium text-slate-700 ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
+        <option value="AM">AM</option>
+        <option value="PM">PM</option>
+      </select>
+    </div>
+  )
+}
+
 export default function BookFacilityPage() {
   const { user } = useAuth();
   const router = useRouter();
@@ -20,8 +62,8 @@ export default function BookFacilityPage() {
     event_title: '',
     department_id: user?.department_id || 1,
     booking_date: '',
-    start_time: '',
-    end_time: '',
+    start_time: '10:00',
+    end_time: '11:00',
     participants_count: '',
     purpose: '',
     description: '',
@@ -160,7 +202,7 @@ export default function BookFacilityPage() {
             <button onClick={() => router.push('/bookings')} className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
               View My Bookings
             </button>
-            <button onClick={() => { setShowSuccess(false); setForm({ ...form, event_title: '', booking_date: '', start_time: '', end_time: '', participants_count: '', purpose: '', description: '' }); setDocument(null); }} className="px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-all">
+            <button onClick={() => { setShowSuccess(false); setForm({ ...form, event_title: '', booking_date: '', start_time: '10:00', end_time: '11:00', participants_count: '', purpose: '', description: '' }); setDocument(null); }} className="px-5 py-2.5 border border-slate-300 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-all">
               Book Another
             </button>
           </div>
@@ -191,12 +233,12 @@ export default function BookFacilityPage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Start *</label>
-                <input type="time" value={form.start_time} onChange={(e) => updateField('start_time', e.target.value)} className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none ${errors.start_time ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`} />
+                <AmPmTimePicker value={form.start_time} onChange={(v) => updateField('start_time', v)} error={errors.start_time} />
                 {errors.start_time && <p className="text-xs text-red-500 mt-1">{errors.start_time}</p>}
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">End *</label>
-                <input type="time" value={form.end_time} onChange={(e) => updateField('end_time', e.target.value)} className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none ${errors.end_time ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`} />
+                <AmPmTimePicker value={form.end_time} onChange={(v) => updateField('end_time', v)} error={errors.end_time} />
                 {errors.end_time && <p className="text-xs text-red-500 mt-1">{errors.end_time}</p>}
               </div>
             </div>
