@@ -13,13 +13,13 @@ export default function AdminFacilitiesPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
-  const [form, setForm] = useState({ facility_name: '', facility_type_id: 1, capacity: '', location: '', description: '', availability_status: 'available' as const, image: '', amenities: '' });
+  const [form, setForm] = useState({ facility_name: '', facility_type_id: 1, capacity: '', location: '', description: '', availability_status: 'available' as 'available' | 'maintenance' | 'unavailable', image: '', amenities: '' });
 
   const facilities = getFacilities();
   const filtered = facilities.filter(f => !search || f.facility_name.toLowerCase().includes(search.toLowerCase()));
 
   const openAdd = () => {
-    setForm({ facility_name: '', facility_type_id: 1, capacity: '', location: '', description: '', availability_status: 'available', image: '', amenities: '' });
+    setForm({ facility_name: '', facility_type_id: 1, capacity: '', location: '', description: '', availability_status: 'available' as 'available' | 'maintenance' | 'unavailable', image: '', amenities: '' });
     setEditId(null);
     setShowForm(true);
   };

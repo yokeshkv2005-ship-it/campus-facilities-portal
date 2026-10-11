@@ -34,15 +34,15 @@ const AmPmTimePicker = ({ value, onChange, error }: { value: string, onChange: (
   }
 
   return (
-    <div className="flex gap-1.5">
-      <select value={h.toString()} onChange={(e) => handleHourChange(e.target.value)} className={`flex-1 px-2 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none bg-white ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
+    <div className="flex gap-1 sm:gap-1.5 items-center">
+      <select value={h.toString()} onChange={(e) => handleHourChange(e.target.value)} className={`flex-1 min-w-0 px-2 py-2 sm:py-2.5 border rounded-xl text-xs sm:text-sm focus:ring-2 outline-none bg-white ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
         {[1,2,3,4,5,6,7,8,9,10,11,12].map(num => <option key={num} value={num.toString()}>{num.toString().padStart(2, '0')}</option>)}
       </select>
-      <span className="self-center font-bold text-slate-400">:</span>
-      <select value={min} onChange={(e) => handleMinChange(e.target.value)} className={`flex-1 px-2 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none bg-white ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
+      <span className="self-center font-bold text-slate-400 text-xs sm:text-sm">:</span>
+      <select value={min} onChange={(e) => handleMinChange(e.target.value)} className={`flex-1 min-w-0 px-2 py-2 sm:py-2.5 border rounded-xl text-xs sm:text-sm focus:ring-2 outline-none bg-white ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
         {['00','15','30','45'].map(m => <option key={m} value={m}>{m}</option>)}
       </select>
-      <select value={ampm} onChange={(e) => handleAmPmChange(e.target.value)} className={`flex-1 px-2 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none bg-white font-medium text-slate-700 ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
+      <select value={ampm} onChange={(e) => handleAmPmChange(e.target.value)} className={`flex-1 min-w-0 px-2 py-2 sm:py-2.5 border rounded-xl text-xs sm:text-sm focus:ring-2 outline-none bg-white font-medium text-slate-700 ${error ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`}>
         <option value="AM">AM</option>
         <option value="PM">PM</option>
       </select>
@@ -216,7 +216,7 @@ export default function BookFacilityPage() {
       <PageHeader title="Book a Facility" subtitle="Fill in the details to submit a booking request" />
 
       <form onSubmit={handleSubmit} className="max-w-4xl">
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 mb-6">
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-6 mb-6">
           <h3 className="font-semibold text-slate-800 mb-4">Facility & Schedule</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
@@ -230,14 +230,14 @@ export default function BookFacilityPage() {
               <input type="date" value={form.booking_date} onChange={(e) => updateField('booking_date', e.target.value)} min={new Date().toISOString().split('T')[0]} className={`w-full px-4 py-2.5 border rounded-xl text-sm focus:ring-2 outline-none ${errors.booking_date ? 'border-red-400 focus:ring-red-100' : 'border-slate-300 focus:border-blue-500 focus:ring-blue-100'}`} />
               {errors.booking_date && <p className="text-xs text-red-500 mt-1">{errors.booking_date}</p>}
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Start *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Start Time *</label>
                 <AmPmTimePicker value={form.start_time} onChange={(v) => updateField('start_time', v)} error={errors.start_time} />
                 {errors.start_time && <p className="text-xs text-red-500 mt-1">{errors.start_time}</p>}
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">End *</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">End Time *</label>
                 <AmPmTimePicker value={form.end_time} onChange={(v) => updateField('end_time', v)} error={errors.end_time} />
                 {errors.end_time && <p className="text-xs text-red-500 mt-1">{errors.end_time}</p>}
               </div>

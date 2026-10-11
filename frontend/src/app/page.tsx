@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -36,6 +36,7 @@ const facilities = [
 export default function LandingPage() {
   const { user } = useAuth();
   const router = useRouter();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -48,7 +49,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar */}
-      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-xl border-b border-slate-200/50 z-50">
+      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-xl border-b border-slate-200/50 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
             <Image 
@@ -56,7 +57,7 @@ export default function LandingPage() {
               alt="Karpagam Academy Logo" 
               width={160} 
               height={40} 
-              className="object-contain h-10 w-auto"
+              className="object-contain h-8 sm:h-10 w-auto"
               priority
             />
           </div>
@@ -65,11 +66,67 @@ export default function LandingPage() {
             <a href="#facilities" className="text-sm text-slate-600 hover:text-blue-600 font-medium transition-colors">Facilities</a>
             <a href="#how-it-works" className="text-sm text-slate-600 hover:text-blue-600 font-medium transition-colors">How It Works</a>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-3">
             <Link href="/login" className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors">Login</Link>
             <Link href="/register" className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium rounded-xl hover:shadow-lg hover:shadow-blue-200 transition-all">Register</Link>
           </div>
+          {/* Mobile hamburger button */}
+          <div className="flex sm:hidden items-center gap-2">
+            <Link href="/login" className="px-3 py-1.5 text-xs font-semibold text-blue-600 bg-blue-50 rounded-lg">Login</Link>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-slate-600 hover:text-slate-900 rounded-lg"
+              aria-label="Toggle menu"
+            >
+              <div className="w-5 h-4 flex flex-col justify-between">
+                <span className={`h-0.5 w-full bg-slate-700 transition-all ${mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                <span className={`h-0.5 w-full bg-slate-700 transition-all ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+                <span className={`h-0.5 w-full bg-slate-700 transition-all ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+              </div>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown menu */}
+        {mobileMenuOpen && (
+          <div className="sm:hidden bg-white border-b border-slate-200 px-4 py-4 space-y-3 shadow-xl animate-in slide-in-from-top duration-200">
+            <a
+              href="#features"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1"
+            >
+              Features
+            </a>
+            <a
+              href="#facilities"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1"
+            >
+              Facilities
+            </a>
+            <a
+              href="#how-it-works"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-sm font-medium text-slate-700 hover:text-blue-600 py-1"
+            >
+              How It Works
+            </a>
+            <div className="pt-2 border-t border-slate-100 flex gap-2">
+              <Link
+                href="/login"
+                className="flex-1 text-center py-2 text-sm font-medium text-slate-700 bg-slate-100 rounded-xl"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="flex-1 text-center py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-md"
+              >
+                Register
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
@@ -87,7 +144,7 @@ export default function LandingPage() {
             <Star className="w-3.5 h-3.5 text-blue-300" />
             Smart Campus Management System
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-4 sm:mb-6">
             Campus Facilities
             <br />
             <span className="text-blue-400">
@@ -96,23 +153,23 @@ export default function LandingPage() {
             <br />
             Portal
           </h1>
-          <p className="text-lg text-slate-200 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-200 max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed">
             A smart digital platform for managing campus facilities, bookings, schedules and programs efficiently. Streamline your campus operations with ease.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/login" className="inline-flex items-center gap-2 px-7 py-3.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-900/50 transition-all text-sm">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
+            <Link href="/login" className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-900/50 transition-all text-sm">
               Get Started <ArrowRight className="w-4 h-4" />
             </Link>
-            <a href="#facilities" className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/20 transition-all text-sm backdrop-blur-md">
+            <a href="#facilities" className="inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white/10 border border-white/30 text-white font-semibold rounded-xl hover:bg-white/20 transition-all text-sm backdrop-blur-md">
               Explore Facilities <ChevronRight className="w-4 h-4" />
             </a>
           </div>
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto">
+          <div className="mt-10 sm:mt-16 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 max-w-3xl mx-auto">
             {[{ num: '10+', label: 'Facilities' }, { num: '500+', label: 'Bookings' }, { num: '50+', label: 'Programs' }, { num: '100%', label: 'Digital' }].map((s) => (
-              <div key={s.label} className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4">
-                <p className="text-2xl font-bold text-white">{s.num}</p>
-                <p className="text-xs text-blue-200 font-medium mt-1">{s.label}</p>
+              <div key={s.label} className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-4">
+                <p className="text-xl sm:text-2xl font-bold text-white">{s.num}</p>
+                <p className="text-[11px] sm:text-xs text-blue-200 font-medium mt-0.5 sm:mt-1">{s.label}</p>
               </div>
             ))}
           </div>

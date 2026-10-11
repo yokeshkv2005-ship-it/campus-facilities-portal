@@ -46,19 +46,30 @@ export default function CalendarPage() {
 
       <div className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
-          <div className="flex items-center gap-3">
-            <button onClick={prevMonth} className="p-2 rounded-lg hover:bg-slate-200 text-slate-600 transition-colors"><ChevronLeft className="w-5 h-5" /></button>
-            <h2 className="text-lg font-semibold text-slate-800 min-w-[200px] text-center">{monthName}</h2>
-            <button onClick={nextMonth} className="p-2 rounded-lg hover:bg-slate-200 text-slate-600 transition-colors"><ChevronRight className="w-5 h-5" /></button>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-100 bg-slate-50">
+          <div className="flex items-center justify-between w-full sm:w-auto gap-2 sm:gap-3">
+            <button onClick={prevMonth} className="p-1.5 sm:p-2 rounded-lg hover:bg-slate-200 text-slate-600 transition-colors" aria-label="Previous month"><ChevronLeft className="w-5 h-5" /></button>
+            <h2 className="text-base sm:text-lg font-semibold text-slate-800 text-center flex-1 sm:min-w-[180px]">{monthName}</h2>
+            <button onClick={nextMonth} className="p-1.5 sm:p-2 rounded-lg hover:bg-slate-200 text-slate-600 transition-colors" aria-label="Next month"><ChevronRight className="w-5 h-5" /></button>
           </div>
-          <button onClick={today} className="px-4 py-1.5 text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">Today</button>
+          <button onClick={today} className="w-full sm:w-auto px-4 py-1.5 text-xs sm:text-sm font-medium text-blue-600 hover:bg-blue-50 rounded-lg border border-blue-200 transition-colors">Today</button>
         </div>
 
         {/* Day names */}
-        <div className="grid grid-cols-7 border-b border-slate-100">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => (
-            <div key={d} className="px-2 py-2 text-center text-xs font-semibold text-slate-500 uppercase">{d}</div>
+        <div className="grid grid-cols-7 border-b border-slate-100 bg-slate-50/50">
+          {[
+            { short: 'S', full: 'Sun' },
+            { short: 'M', full: 'Mon' },
+            { short: 'T', full: 'Tue' },
+            { short: 'W', full: 'Wed' },
+            { short: 'T', full: 'Thu' },
+            { short: 'F', full: 'Fri' },
+            { short: 'S', full: 'Sat' },
+          ].map(d => (
+            <div key={d.full} className="px-1 sm:px-2 py-2 text-center text-[11px] sm:text-xs font-semibold text-slate-500 uppercase">
+              <span className="sm:hidden">{d.short}</span>
+              <span className="hidden sm:inline">{d.full}</span>
+            </div>
           ))}
         </div>
 
@@ -67,24 +78,24 @@ export default function CalendarPage() {
           {days.map((day, i) => {
             const events = day ? getEventsForDate(day) : [];
             return (
-              <div key={i} className={`min-h-[100px] md:min-h-[120px] border-b border-r border-slate-100 p-1.5 ${!day ? 'bg-slate-50/50' : 'hover:bg-blue-50/30'} transition-colors`}>
+              <div key={i} className={`min-h-[72px] sm:min-h-[100px] md:min-h-[120px] border-b border-r border-slate-100 p-1 sm:p-1.5 ${!day ? 'bg-slate-50/50' : 'hover:bg-blue-50/30'} transition-colors`}>
                 {day && (
                   <>
-                    <div className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium mb-1 ${isToday(day) ? 'bg-blue-600 text-white' : 'text-slate-700'}`}>
+                    <div className={`w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center rounded-full text-xs sm:text-sm font-medium mb-1 ${isToday(day) ? 'bg-blue-600 text-white' : 'text-slate-700'}`}>
                       {day}
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-0.5 sm:space-y-1">
                       {events.slice(0, 2).map((ev, j) => (
                         <button
                           key={ev.booking_id}
                           onClick={() => setSelectedEvent(ev)}
-                          className={`w-full text-left px-1.5 py-0.5 rounded text-[10px] md:text-xs text-white font-medium truncate ${eventColors[j % eventColors.length]} hover:opacity-80 transition-opacity`}
+                          className={`w-full text-left px-1 sm:px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] md:text-xs text-white font-medium truncate ${eventColors[j % eventColors.length]} hover:opacity-80 transition-opacity`}
                         >
                           {ev.event_title}
                         </button>
                       ))}
                       {events.length > 2 && (
-                        <p className="text-[10px] text-blue-600 font-medium px-1">+{events.length - 2} more</p>
+                        <p className="text-[9px] sm:text-[10px] text-blue-600 font-medium px-0.5 sm:px-1">+{events.length - 2} more</p>
                       )}
                     </div>
                   </>
